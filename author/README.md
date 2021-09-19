@@ -1,4 +1,4 @@
-# authy
+# author
 
 ## Project setup
 ```
