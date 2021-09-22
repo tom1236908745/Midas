@@ -45,5 +45,17 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  publicRuntimeConfig: {
+    APIKEY: process.env.APIKEY,
+    AUTHDOMAIN: process.env.AUTHDOMAIN,
+    PROJECTID: process.env.PROJECTID,
+    STORAGEBUCKET: process.env.STORAGEBUCKET,
+    MESSAGINGSENDERID: process.env.MEASUREMENTID,
+    APPID: process.env.APPID,
+    MEASUREMENTID: process.env.MEASUREMENTID,
+  },
+  privateRuntimeConfig: {
+    secret: process.env.SECRET_KEY,
   }
 }

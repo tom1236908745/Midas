@@ -1,8 +1,10 @@
 <!-- Please remove this file from your project -->
 <template>
   <div class="hello">
+     <h1>Hello {{ name }}!!</h1>
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
+    <button @click="signOutFire">Sign out</button>
     <button @click="apiPublic">public</button>
     <button @click="apiPrivate">private</button>
     <br />
@@ -13,10 +15,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import axios from 'axios'
+import { getAuth, signOut } from "firebase/auth";
 export default Vue.extend({
    data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      name: getAuth().currentUser.email
+      
     }
   },
   methods: {
@@ -27,6 +32,15 @@ export default Vue.extend({
     apiPrivate: async function () {
       let res = await axios.get('http://localhost:8000/private')
       this.msg = res.data
+    },
+    signOutFire() {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.$router.push('/signin')
+      }).catch((error) => {
+        // An error happened.
+        console.log(error);
+      });
     }
   }
 })
