@@ -1,39 +1,29 @@
 <template>
-    <div class="signin">
-        <h2>Sign in</h2>
-        <input type="text" placeholder="email" v-model="email">
-        <input type="password" placeholder="Password" v-model="password">
-        <button @click="signIn">Signin</button>
-        <p>You don't have an account?
-            <router-link to="/signup">create account now!!</router-link>
-        </p>
-    </div>
+  <div class="signin">
+    <h2>Sign in</h2>
+    <input type="text" placeholder="email" v-model="email" />
+    <input type="password" placeholder="Password" v-model="password" />
+    <button>Signin</button>
+    <p>
+      You don't have an account?
+      <router-link to="/signup">create account now!!</router-link>
+    </p>
+  </div>
 </template>
 
 <script>
-import firebase from 'firebase/app'
-export default {
-  name: 'Signin',
-  data: function () {
+import Vue from 'vue'
+export default Vue.extend({
+  data() {
     return {
-      email: '',
-      password: ''
-    }
-  },
-  methods: {
-    signIn: function () {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(res => {
-        localStorage.setItem('jwt', res.user.qa)
-        this.$router.push('/')
-      }, err => {
-        alert(err.message)
-      })
-    }
+      email: "",
+      password: ""
+    };
   }
-}
+});
 </script>
 
-<style scoped>
+<style>
 h1, h2 {
   font-weight: normal;
 }

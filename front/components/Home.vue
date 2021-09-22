@@ -1,29 +1,25 @@
+<!-- Please remove this file from your project -->
 <template>
- <div class="hello">
-  <h1>{{ msg }}</h1>
-  <h2>Essential Links</h2>
-  <button @click="signOut">Sign out</button>
-  <button @click="apiPublic">public</button>
-  <button @click="apiPrivate">private</button>
- </div>
+  <div class="hello">
+    <h1>{{ msg }}</h1>
+    <h2>Essential Links</h2>
+    <button @click="apiPublic">public</button>
+    <button @click="apiPrivate">private</button>
+    <br />
+    <router-link to="/signin">sign in now!!</router-link>
+    <router-link to="/signup">sign up now!!</router-link>
+  </div>
 </template>
-
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import axios from 'axios'
-import firebase from 'firebase/app'
-export default {
-  data () {
+export default Vue.extend({
+   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
   },
   methods: {
-    signOut: function () {
-      firebase.auth().signOut().then(() => {
-        localStorage.removeItem('jwt')
-        this.$router.push('/signin')
-      })
-    },
     apiPublic: async function () {
       let res = await axios.get('http://localhost:8000/public')
       this.msg = res.data
@@ -33,30 +29,29 @@ export default {
       this.msg = res.data
     }
   }
-}
+})
 </script>
 <style scoped>
-h1,
-h2 {
- font-weight: normal;
+h1, h2 {
+  font-weight: normal;
 }
 ul {
- list-style-type: none;
- padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 li {
- display: inline-block;
- margin: 0 10px;
+  display: inline-block;
+  margin: 0 10px;
 }
 a {
- color: #42b983;
+  color: #42b983;
 }
 button {
- margin: 10px 0;
- padding: 10px;
+  margin: 10px 0;
+  padding: 10px;
 }
 .hello {
- text-align: center;
- margin-top: 20%;
+  text-align: center;
+  margin-top: 15%;
 }
 </style>
