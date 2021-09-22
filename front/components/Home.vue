@@ -1,7 +1,7 @@
 <!-- Please remove this file from your project -->
 <template>
   <div class="hello">
-     <h1>Hello {{ name }}!!</h1>
+     <h1>Hello {{ name.includes("@") ? name.split("@")[0] : name}}!!</h1>
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <button @click="signOutFire">Sign out</button>
@@ -20,8 +20,7 @@ export default Vue.extend({
    data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      name: getAuth().currentUser.email
-      
+      name: getAuth().currentUser?.email
     }
   },
   methods: {
