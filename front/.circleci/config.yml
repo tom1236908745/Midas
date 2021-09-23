@@ -38,3 +38,4 @@ workflows:
               only:
                 - main
                 - master
+                - dev
