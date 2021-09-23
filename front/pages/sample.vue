@@ -3,15 +3,16 @@
     <v-row wrap justify="center" align="center">
       <v-col :sm="12" :md="8">
         <p class="text-center">ログインユーザのみ閲覧可能なコンテンツ</p>
+        <p class="text-center">サンプルページ</p>
         <div class="pa-5">
           <v-btn
             block
             color="indigo darken-1"
             nuxt
-            to="/sample"
+            to="/"
             class="white--text"
           >
-            サンプルページへ
+            トップページへ
           </v-btn>
         </div>
         <div class="pa-5">
@@ -30,19 +31,17 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 import { getAuth } from "~/plugins/firebase";
-
 export default Vue.extend({
   methods: {
     signOut: function(err) {
       const auth = getAuth()
       this.$store
-        .dispatch('signOut', {
-          auth: auth
-        })
+        .dispatch('signOut')
         .then(() => {
           this.$router.push({
+            auth: auth,
             name: 'login'
           })
         })

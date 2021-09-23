@@ -1,5 +1,5 @@
 import firebase from 'firebase/compat/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 // ** Firebaseプロジェクトの設定を記す
 /* if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -23,4 +23,4 @@ if (!firebase.apps.length) {
   });
 }
 
-export { firebase, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut};
+export { firebase, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged};

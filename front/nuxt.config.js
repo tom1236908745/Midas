@@ -1,3 +1,5 @@
+import colors from 'vuetify/es5/util/colors'
+
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -7,6 +9,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    titleTemplate: '%s - front',
     title: 'front',
     htmlAttrs: {
       lang: 'en'
@@ -28,6 +31,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/firebase.js',
+    '~/plugins/firebase_auth.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -37,25 +42,42 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    // https://go.nuxtjs.dev/vuetify
+    '@nuxtjs/vuetify',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    // https://go.nuxtjs.dev/axios
+    '@nuxtjs/axios',
   ],
+
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  axios: {},
+
+  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    theme: {
+      dark: true,
+      themes: {
+        dark: {
+          primary: colors.blue.darken2,
+          accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        }
+      }
+    }
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
-  publicRuntimeConfig: {
-    APIKEY: process.env.APIKEY,
-    AUTHDOMAIN: process.env.AUTHDOMAIN,
-    PROJECTID: process.env.PROJECTID,
-    STORAGEBUCKET: process.env.STORAGEBUCKET,
-    MESSAGINGSENDERID: process.env.MEASUREMENTID,
-    APPID: process.env.APPID,
-    MEASUREMENTID: process.env.MEASUREMENTID,
-  },
-  privateRuntimeConfig: {
-    secret: process.env.SECRET_KEY,
+  router: {
+    middleware: 'authenticated'
   }
 }
