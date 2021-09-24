@@ -30,8 +30,6 @@ export const getters = {
         return state.user
     },
     isAuthenticated (state) {
-        console.log('inside index', state.user);
-        
         return !!state.user
     }
 }
