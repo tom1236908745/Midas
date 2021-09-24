@@ -12,28 +12,22 @@ export default {
     titleTemplate: '%s - front',
     title: 'front',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '~/plugins/firebase.js',
-    '~/plugins/firebase_auth.js'
-  ],
+  plugins: ['~/plugins/firebase.js', '~/plugins/firebase_auth.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -50,6 +44,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/dotenv',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -68,19 +63,28 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+          success: colors.green.accent3,
+        },
+      },
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  },
+  build: {},
   generate: {
-    dir: 'public'
+    dir: 'public',
   },
   router: {
-    middleware: 'authenticated'
-  }
+    middleware: 'authenticated',
+  },
+  publicRuntimeConfig: {
+    APIKEY: process.env.APIKEY,
+    AUTHDOMAIN: process.env.AUTHDOMAIN,
+    PROJECTID: process.env.PROJECTID,
+    STORAGEBUCKET: process.env.STORAGEBUCKET,
+    MESSAGINGSENDERID: process.env.MEASUREMENTID,
+    APPID: process.env.APPID,
+    MEASUREMENTID: process.env.MEASUREMENTID,
+  },
+  privateRuntimeConfig: {},
 }
