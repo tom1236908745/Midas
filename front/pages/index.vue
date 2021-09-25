@@ -12,7 +12,7 @@
         to="/profile"
         class="white--text"
       >
-        プロフィーページへ
+        プロフィールページへ
       </v-btn>
     </div>
     <PostPlaza />

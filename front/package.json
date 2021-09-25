@@ -13,8 +13,9 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dotenv": "^1.4.1",
     "core-js": "^3.15.1",
-    "firebase": "^9.0.2",
+    "firebase": "^9.1.0",
     "nuxt": "^2.15.7",
+    "vuefire": "^3.0.0-alpha.2",
     "vuetify": "^2.5.5",
     "zxcvbn": "^4.4.2"
   },

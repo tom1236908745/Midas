@@ -1,6 +1,8 @@
 <template>
-  <v-card class="my-10 pa-4">
-    <p>
+  <div>
+    <PostAdd />
+    <v-card class="my-10 pa-4">
+      <!-- <p>
       <v-text-field
         type="text"
         placeholder="TODOを入力しましょう！"
@@ -8,31 +10,32 @@
         v-on:keyup.enter="addTodo(newItemTitle)"
       />
       <v-btn @click="addTodo(newItemTitle)">追加</v-btn>
-    </p>
-
-    <div>
-      <v-card
-        v-for="item in items"
-        :key="item.id"
-        max-width="700px"
-        min-height="100px"
-      >
-        <label v-bind:class="{ done: item.isChecked }">
-          <v-checkbox
-            type="checkbox"
-            v-model="item.isChecked"
-            @click="saveTodo"
-            :label="item.title"
-          />
-        </label>
-      </v-card>
-    </div>
-    <ActionDeleteConfirm
-      class="mt-4"
-      v-if="!!this.items[0] && !!this.selected"
-      @deleteConf="deleteTodo()"
-    />
-  </v-card>
+    </p> -->
+      <PostCardPost />
+      <div>
+        <v-card
+          v-for="item in items"
+          :key="item.id"
+          max-width="700px"
+          min-height="100px"
+        >
+          <label v-bind:class="{ done: item.isChecked }">
+            <v-checkbox
+              type="checkbox"
+              v-model="item.isChecked"
+              @click="saveTodo"
+              :label="item.title"
+            />
+          </label>
+        </v-card>
+      </div>
+      <ActionDeleteConfirm
+        class="mt-4"
+        v-if="!!this.items[0] && !this.selected"
+        @deleteConf="deleteTodo()"
+      />
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -83,7 +86,7 @@ export default Vue.extend({
 .done {
   text-decoration: line-through;
 }
-.target{
+.target {
   pointer-events: none;
 }
 </style>

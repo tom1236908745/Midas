@@ -5,7 +5,10 @@
       {{ prof.includes('@') ? prof.substring(0, prof.indexOf('@')) : prof }}'
       profile
     </h2>
-    <PostAdd />
+    <ProfileEdit />
+    
+    <br />
+    <v-btn class="ma-6" @click="$router.push('/')"> 投稿画面へ</v-btn>
   </div>
 </template>
 
@@ -19,9 +22,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    addPost() {
-      al
-    }
+    
   }
 })
 </script>
