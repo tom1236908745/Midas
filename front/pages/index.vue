@@ -2,22 +2,17 @@
   <v-container>
     <v-row wrap justify="center" align="center">
       <v-col :sm="12" :md="8">
-        <p class="text-center">ログインユーザのみ閲覧可能なコンテンツ</p>
+        <p class="text-center text-h4">広場</p>
       </v-col>
     </v-row>
     <div class="pa-5">
-      <v-btn
-        color="indigo darken-1"
-        nuxt
-        to="/profile"
-        class="white--text"
-      >
+     <v-btn plain elevation="5" nuxt to="/profile">
         プロフィールページへ
       </v-btn>
     </div>
     <PostPlaza />
     <div class="pa-5">
-      <v-btn outlined color="grey darken-3" @click="signOut">
+      <v-btn plain elevation="5" @click="signOut">
         ログアウト
       </v-btn>
     </div>

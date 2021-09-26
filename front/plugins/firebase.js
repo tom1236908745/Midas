@@ -13,6 +13,7 @@ import {
   getDocs,
   addDoc,
   collection,
+  deleteDoc
 } from 'firebase/firestore'
 
 let firebaseApp = {}
@@ -44,4 +45,5 @@ export {
   getDocs,
   addDoc,
   collection,
+  deleteDoc
 }

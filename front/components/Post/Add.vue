@@ -15,7 +15,14 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="inputComment"
+                :rules="commentRules"
+                label="コメント"
+                required
+              ></v-text-field>
+            <!-- <v-row>
               <v-col cols="10">
                 タイトル
                 <v-text-field
@@ -53,11 +60,13 @@
                 金額
                 <v-text-field placeholder="0" type="number" required></v-text-field>
               </v-col>
-            </v-row>
+            </v-row> -->
+            <v-btn :disabled="!valid" @click="addComment"> 投稿する </v-btn>
+            </v-form>
           </v-container>
           <small>* ... 必須項目です</small>
         </v-card-text>
-        
+
         <v-card-actions>
           <v-spacer />
           <v-btn color="blue darken-1" text @click="close()"> Close </v-btn>
@@ -70,12 +79,36 @@
 
 <script>
 import Vue from 'vue';
+import { db, collection, addDoc } from "~/plugins/firebase"
 export default Vue.extend({
   data: () => ({
     dialog: false,
+    // form入力データ
+      inputComment: "",
+      // バリデーション
+      valid: true,
+      commentRules: [
+        v => !!v || 'コメントは必須項目です',
+      ],
   }),
   methods: {
+     // コメント追加
+    addComment() {
+      const now = new Date()
+
+      addDoc(collection(db, 'comments'), {
+        content: this.inputComment,
+        avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
+        createdAt: now
+      })
+      
+      this.close()
+    },
+    clear() {
+      this.$refs.form.reset()
+    },
     close() {
+      this.clear()
       this.dialog = false
     }
   }
@@ -83,5 +116,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-
 </style>
