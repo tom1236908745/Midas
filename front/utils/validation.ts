@@ -1,0 +1,1 @@
+export const requireRule: any = (v: any) => !!v || '必須項目です'

@@ -16,52 +16,56 @@
         <v-card-text>
           <v-container>
             <v-form ref="form" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="inputComment"
-                :rules="commentRules"
-                label="コメント"
-                required
-              ></v-text-field>
-            <!-- <v-row>
-              <v-col cols="10">
-                タイトル
-                <v-text-field
-                  placeholder="※ パソコンについて相談したい。"
-                  hint="記事のタイトルを入力して下さい。"
-                  persistent-hint　required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="10">
-                概要
-                <v-text-field
-                  placeholder="※ 会津大学生にパソコンの事を聞きたい。"
-                  hint="記事の概要を説明して下さい。"
-                  persistent-hint
-                ></v-text-field>
-              </v-col>
-              <v-col cols="10">
-                <v-select
-                  :items="[
-                    '飲食',
-                    'アパレルショップ',
-                    '八百屋',
-                    '花屋',
-                    'IT企業',
-                    '会津大学生',
-                  ]"
-                  placeholder="対象業種"
-                  hint="相談したい対象業種を選択して下さい"
-                  persistent-hint
-                  required
-                  multiple
-                ></v-select>
-              </v-col>
-              <v-col cols="10">
-                金額
-                <v-text-field placeholder="0" type="number" required></v-text-field>
-              </v-col>
-            </v-row> -->
-            <v-btn :disabled="!valid" @click="addComment"> 投稿する </v-btn>
+              <v-row>
+                <v-col cols="10">
+                  タイトル*
+                  <v-text-field
+                    placeholder="※ パソコンについて相談したい。"
+                    hint="記事のタイトルを入力して下さい。"
+                    persistent-hint　
+                    v-model="postData.title"
+                    :rules="[requireRule]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="10">
+                  概要*
+                  <v-text-field
+                    placeholder="※ 会津大学生にパソコンの事を聞きたい。"
+                    hint="記事の概要を説明して下さい。"
+                    persistent-hint
+                    v-model="postData.exp"
+                    :rules="[requireRule]"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="10">
+                  <v-select
+                    :items="[
+                      '飲食',
+                      'アパレルショップ',
+                      '八百屋',
+                      '花屋',
+                      'IT企業',
+                      '会津大学生',
+                    ]"
+                    placeholder="対象業種"
+                    hint="相談したい対象業種を選択して下さい"
+                    persistent-hint
+                    v-model="postData.jobs"
+                    multiple
+                  ></v-select>
+                </v-col>
+                <v-col cols="10">
+                  金額
+                  <v-text-field
+                    placeholder="0"
+                    type="number"
+                    v-model="postData.money"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-btn :disabled="!valid" @click="addComment"> 投稿する </v-btn>
             </v-form>
           </v-container>
           <small>* ... 必須項目です</small>
@@ -79,26 +83,31 @@
 
 <script>
 import Vue from 'vue';
-import { db, collection, addDoc } from "~/plugins/firebase"
+import { db, collection, addDoc } from "~/plugins/firebase";
+import {requireRule} from '~/utils/validation';
 export default Vue.extend({
   data: () => ({
     dialog: false,
     // form入力データ
-      inputComment: "",
-      // バリデーション
-      valid: true,
-      commentRules: [
-        v => !!v || 'コメントは必須項目です',
-      ],
+    postData: {
+      title: "",
+      exp: "",
+      jobs: [],
+      money: 0,
+    },
+    // バリデーション
+    valid: true,
+    requireRule,
   }),
   methods: {
      // コメント追加
     addComment() {
       const now = new Date()
-
-      addDoc(collection(db, 'comments'), {
-        content: this.inputComment,
-        avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
+      addDoc(collection(db, 'posts'), {
+        title: this.postData.title,
+        exp: this.postData.exp,
+        jobs: this.postData.jobs,
+        money: this.postData.money,
         createdAt: now
       })
       

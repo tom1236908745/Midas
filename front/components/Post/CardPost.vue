@@ -66,7 +66,7 @@ export default Vue.extend({
     }, */
     async readFromFirestore() {
       this.comments = []
-      let snapshot = await getDocs(collection(db, "comments"));
+      let snapshot = await getDocs(collection(db, "posts"));
       const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second:'numeric' };
       snapshot.forEach((doc) => {
         this.element = doc.data()
@@ -85,7 +85,7 @@ export default Vue.extend({
     },
     async deleteComment(id) {
       if (!window.confirm('コメントを削除してよろしいですか？')) return
-      await deleteDoc(doc(db, "comments", id))
+      await deleteDoc(doc(db, "posts", id))
     },
   },
 })
