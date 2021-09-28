@@ -13,7 +13,9 @@ import {
   getDocs,
   addDoc,
   collection,
-  deleteDoc
+  deleteDoc,
+  query,
+  where
 } from 'firebase/firestore'
 
 let firebaseApp = {}
@@ -45,5 +47,7 @@ export {
   getDocs,
   addDoc,
   collection,
-  deleteDoc
+  deleteDoc,
+  query,
+  where
 }

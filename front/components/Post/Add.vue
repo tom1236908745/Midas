@@ -18,7 +18,7 @@
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
                 <v-col cols="10">
-                  タイトル*
+                  タイトル<span>*</span>
                   <v-text-field
                     placeholder="※ パソコンについて相談したい。"
                     hint="記事のタイトルを入力して下さい。"
