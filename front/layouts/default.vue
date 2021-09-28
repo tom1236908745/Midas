@@ -88,9 +88,25 @@
   </v-app>
 </template>
 
-<script>
-export default {
-  data () {
+<script lang="ts">
+import Vue from 'vue';
+interface itemsType {
+  icon: String
+  title: String
+  to: String
+}
+interface Data {
+  clipped: Boolean
+  drawer: Boolean
+  fixed: Boolean
+  items: Array<itemsType>
+  miniVariant: Boolean
+  right: Boolean
+  rightDrawer: Boolean
+  title: String
+}
+export default Vue.extend({
+  data(): Data {
     return {
       clipped: false,
       drawer: false,
@@ -113,5 +129,5 @@ export default {
       title: 'Midus'
     }
   }
-}
+})
 </script>

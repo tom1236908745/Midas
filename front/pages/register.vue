@@ -24,11 +24,11 @@
                   <v-card-text class="pa-0">
                     <v-form
                       ref="register_form"
-                      v-model="register_valid"
+                      v-model="registerValid"
                       lazy-validation
                     >
                       <v-text-field
-                        v-model="register_email"
+                        v-model="registerEmail"
                         label="メールアドレス"
                         :rules="emailRules"
                         required
@@ -36,19 +36,19 @@
                       />
 
                       <v-text-field
-                        ref="register_password"
-                        v-model="register_password"
+                        ref="registerPassword"
+                        v-model="registerPassword"
                         label="パスワード"
                         required
                         :append-icon="
-                          show_registerPassword ? 'mdi-eye' : 'mdi-eye-off'
+                          showRegisterPassword ? 'mdi-eye' : 'mdi-eye-off'
                         "
-                        :type="show_registerPassword ? 'text' : 'password'"
-                        :rules="register_passwordRules"
+                        :type="showRegisterPassword ? 'text' : 'password'"
+                        :rules="registerPasswordRules"
                         validate-on-blur
                         loading
                         @click:append="
-                          show_registerPassword = !show_registerPassword
+                          showRegisterPassword = !showRegisterPassword
                         "
                       >
                         <template v-slot:progress>
@@ -61,17 +61,17 @@
                         </template>
                       </v-text-field>
                       <v-text-field
-                        v-model="register_password_again"
+                        v-model="registerPasswordAgain"
                         label="パスワード（確認）"
                         required
                         :append-icon="
-                          show_registerPassword ? 'mdi-eye' : 'mdi-eye-off'
+                          showRegisterPassword ? 'mdi-eye' : 'mdi-eye-off'
                         "
-                        :type="show_registerPassword ? 'text' : 'password'"
+                        :type="showRegisterPassword ? 'text' : 'password'"
                         validate-on-blur
-                        :rules="register_passwordAgainRules"
+                        :rules="registerPasswordAgainRules"
                         @click:append="
-                          show_registerPassword = !show_registerPassword
+                          showRegisterPassword = !showRegisterPassword
                         "
                       />
 
@@ -80,7 +80,7 @@
                       </v-alert>
 
                       <v-btn
-                        :disabled="!register_valid"
+                        :disabled="!registerValid"
                         color="blue darken-3"
                         class="mr-4 white--text"
                         @click="email_register"
@@ -100,45 +100,41 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import zxcvbn from 'zxcvbn'
 import { mapActions, mapState, mapGetters } from 'vuex'
-import { getAuth } from "~/plugins/firebase";
+import { getAuth } from "../plugins/firebase";
+import {emailRule, registerPasswordRule,} from "../utils/validation";
+interface Data {
+  registerErrorMsg: String
+  tab: any
+  registerValid: Boolean
+  registerEmail: String
+  registerPassword: String
+  registerPasswordAgain: String
+  emailRule: Function
+  registerPasswordRule: Function
+  registerPasswordAgainRule: Array<any>
+  showRegisterPassword: Boolean
+}
 
 export default Vue.extend({
-  layout: 'signin',
-  data: function() {
+  data(): Data {
       return {
           registerErrorMsg: '',
           tab: null,
-          register_valid: true,
-          register_email: '',
-          register_password: '',
-          register_password_again: '',
-          emailRules: [
-              (v) => {
+          registerValid: true,
+          registerEmail: '',
+          registerPassword: '',
+          registerPasswordAgain: '',
+          emailRule,
+          registerPasswordRule,
+          registerPasswordAgainRule: [
+              (v: any) => {
                   if (v) {
                       return (
-                          /.+@.+\..+/.test(v) ||
-                          '有効なメールアドレスを入力してください'
-                      )
-                  }else{
-                      return true
-                  }
-              }
-          ],
-          register_passwordRules: [
-              (v) => !!v || 'パスワードを入力してください',
-              (v) =>
-                  zxcvbn(v).score >= 3 ||
-                  '大文字・小文字・数字・記号を混ぜた強いパスワードにしてください'
-          ],
-          register_passwordAgainRules: [
-              (v) => {
-                  if (v) {
-                      return (
-                          this.$refs.register_password.value === v ||
+                          this.$refs.registerPassword.value === v ||
                           'パスワードと一致しません'
                       )
                   }else{
@@ -147,7 +143,7 @@ export default Vue.extend({
                   }
               }
           ],
-          show_registerPassword: false
+          showRegisterPassword: false
       }
   },
   computed: {
@@ -155,7 +151,7 @@ export default Vue.extend({
           return this.score.value
       },
       score() {
-          const result = zxcvbn(this.register_password)
+          const result = zxcvbn(this.registerPassword)
 
           switch (result.score) {
               case 4:
@@ -187,41 +183,41 @@ export default Vue.extend({
       }
   },
   methods: {
-      email_register: function(err) {
-        const auth = getAuth()
-          if (this.$refs.register_form.validate()) {
-              this.$store
-                  .dispatch('signUp', {
-                    auth: auth,
-                    email: this.register_email,
-                    password: this.register_password
-                  })
-                  .then(() => {
-                      this.register_email = ''
-                      this.register_password = ''
-                      this.$router.push({
-                          name: 'index',
-                          params: {
-                              dashboard_msg: true,
-                              dashboard_msg_text:
-                                  'アカウントの登録が完了しました。'
-                          }
-                      })
-                  })
-                  .catch((err) => {
-                      console.log(err)
-                      if (err.code === 'auth/email-already-in-use') {
-                          this.registerErrorMsg =
-                              'このメールアドレスは既に登録されています。'
-                      } else if (err.code === 'auth/invalid-email') {
-                          this.registerErrorMsg = '無効なメールアドレスです。'
-                      } else {
-                          this.registerErrorMsg =
-                              'エラーにより登録できませんでした。'
-                      }
-                  })
-          }
-      }
+    email_register: function(err) {
+      const auth = getAuth()
+        if (this.$refs.register_form.validate()) {
+          this.$store
+            .dispatch('signUp', {
+              auth: auth,
+              email: this.registerEmail,
+              password: this.registerPassword
+            })
+            .then(() => {
+                this.registerEmail = ''
+                this.registerPassword = ''
+                this.$router.push({
+                  name: 'index',
+                  params: {
+                    dashboard_msg: true,
+                    dashboard_msg_text:
+                    'アカウントの登録が完了しました。'
+                  }
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+                if (err.code === 'auth/email-already-in-use') {
+                    this.registerErrorMsg =
+                        'このメールアドレスは既に登録されています。'
+                } else if (err.code === 'auth/invalid-email') {
+                    this.registerErrorMsg = '無効なメールアドレスです。'
+                } else {
+                    this.registerErrorMsg =
+                        'エラーにより登録できませんでした。'
+                }
+            })
+        }
+    }
   }
 })
 </script>

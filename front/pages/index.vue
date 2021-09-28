@@ -19,13 +19,13 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { getAuth } from "~/plugins/firebase";
 
 export default Vue.extend({
   methods: {
-    signOut: function(err) {
+    signOut(err): void {
       const auth = getAuth()
       this.$store
         .dispatch('signOut', {

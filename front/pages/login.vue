@@ -24,24 +24,24 @@
                   <v-card-text class="pa-0">
                     <v-form
                       ref="login_form"
-                      v-model="login_valid"
+                      v-model="loginValid"
                       lazy-validation
                     >
                       <v-text-field
-                        v-model="login_email"
+                        v-model="loginEmail"
                         label="メールアドレス"
                         required
                       />
 
                       <v-text-field
-                        v-model="login_password"
+                        v-model="loginPassword"
                         label="パスワード"
                         required
                         :append-icon="
-                          show_loginpassword ? 'mdi-eye' : 'mdi-eye-off'
+                          showLoginpassword ? 'mdi-eye' : 'mdi-eye-off'
                         "
-                        :type="show_loginpassword ? 'text' : 'password'"
-                        @click:append="show_loginpassword = !show_loginpassword"
+                        :type="showLoginpassword ? 'text' : 'password'"
+                        @click:append="showLoginpassword = !showLoginpassword"
                       />
 
                       <v-alert v-if="loginErrorMsg" dense text type="error">
@@ -49,7 +49,7 @@
                       </v-alert>
 
                       <v-btn
-                        :disabled="!login_valid"
+                        :disabled="!loginValid"
                         color="blue darken-3"
                         class="my-4 white--text"
                         @click="email_login"
@@ -69,48 +69,52 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import { getAuth } from "~/plugins/firebase";
+interface Data {
+  tab: any
+  loginValid: Boolean
+  loginEmail: String
+  loginPassword: String
+  showLoginpassword: Boolean
+  loginErrorMsg: String
+}
 export default Vue.extend({
-    layout: 'signin',
-    
-    data: function() {
-        return {
-            tab: null,
-            login_valid: true,
-            login_email: '',
-            login_password: '',
-            show_loginpassword: false,
-            loginErrorMsg: '',
-            socialLoginErrorMsg: ''
-        }
-    },
-    methods: {
-        email_login: function(err) {
-          const auth = getAuth()
-          this.$store
-              .dispatch('signInWithEmail', {
-                auth: auth,
-                email: this.login_email,
-                password: this.login_password
-              })
-              .then(() => {
-                this.login_email = ''
-                this.login_password = ''
-                
-                this.$router.push('/')
-              })
-              .catch((err) => {
-                  if (err.code === 'auth/user-disabled') {
-                      this.loginErrorMsg =
-                          'このアカウントはロックされています。'
-                  } else {
-                      this.loginErrorMsg =
-                          'メールアドレスまたはパスワードが間違っています。'
-                  }
-              })
-        }
+  data: function() {
+    return {
+      tab: null,
+      loginValid: true,
+      loginEmail: '',
+      loginPassword: '',
+      showLoginpassword: false,
+      loginErrorMsg: '',
     }
+  },
+  methods: {
+    email_login(err): void {
+      const auth = getAuth()
+      this.$store
+        .dispatch('signInWithEmail', {
+          auth: auth,
+          email: this.loginEmail,
+          password: this.loginPassword
+        })
+        .then(() => {
+          this.loginEmail = ''
+          this.loginPassword = ''
+          this.$router.push('/')
+        })
+        .catch((err) => {
+          if (err.code === 'auth/user-disabled') {
+              this.loginErrorMsg =
+                  'このアカウントはロックされています。'
+          } else {
+              this.loginErrorMsg =
+                  'メールアドレスまたはパスワードが間違っています。'
+          }
+      })
+    }
+  }
 })
 </script>

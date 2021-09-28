@@ -14,13 +14,13 @@
 	</section>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { db, collection, addDoc, getDocs } from "~/plugins/firebase"
 
 export default Vue.extend({
   methods: {
-    async writeToFirestore() {
+    async writeToFirestore(): Promise<void> {
       try {
         const docRef = await addDoc(collection(db, "users"), {
           first: "Ada",
@@ -32,7 +32,7 @@ export default Vue.extend({
         console.error("Error adding document: ", e);
       }
     },
-    async readFromFirestore() {
+    async readFromFirestore(): Promise<void> {
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);

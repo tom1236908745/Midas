@@ -6,7 +6,9 @@
       </template>
 
       <v-card>
-        <v-card-title class="text-h5 red lighten-1"> 本当に削除してもよろしいですか？ </v-card-title>
+        <v-card-title class="text-h5 red lighten-1">
+          本当に削除してもよろしいですか？
+        </v-card-title>
 
         <!-- <v-card-text class="pt-3">
           <span class="text-h6">本当に削除してもよろしいですか？</span>
@@ -23,16 +25,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
+interface Data {
+  dialog: Boolean
+}
 export default Vue.extend({
-  data () {
+  data(): Data {
     return {
-      dialog: false,
+    dialog: false,
     }
   },
   methods: {
-    moveOut() {
+    moveOut(): void {
       this.$emit('deleteConf');
       this.$nextTick(() => {
         this.dialog = false

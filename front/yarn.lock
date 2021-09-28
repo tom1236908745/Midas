@@ -2414,6 +2414,11 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@types/zxcvbn@^4.4.1":
+  "integrity" "sha512-3NoqvZC2W5gAC5DZbTpCeJ251vGQmgcWIHQJGq2J240HY6ErQ9aWKkwfoKJlHLx+A83WPNTZ9+3cd2ILxbvr1w=="
+  "resolved" "https://registry.npmjs.org/@types/zxcvbn/-/zxcvbn-4.4.1.tgz"
+  "version" "4.4.1"
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
   "integrity" "sha512-QOi5OW45e2R20VygMSNhyQHvpdUwQZqGPc748JLGCYEy+yp8fNFNdbNIGAgZmi9e+2JHPd6i6idRuqivyicIkA=="
   "resolved" "https://registry.npmjs.org/@vue/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-1.2.1.tgz"

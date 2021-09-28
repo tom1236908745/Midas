@@ -22,7 +22,7 @@
                   placeholder="※ 会津太郎"
                   hint="氏名を入力して下さい。"
                   persistent-hint　required
-                  v-model="profData.name"
+                  v-model="users.name"
                   :rules="[requireRule]"
                 ></v-text-field>
               </v-col>
@@ -33,7 +33,7 @@
                   persistent-hint
                   type="date"
                   required
-                  v-model="profData.birth"
+                  v-model="users.birth"
                   :rules="[requireRule]"
                 ></v-text-field>
               </v-col>
@@ -51,7 +51,7 @@
                   hint="経験したことのある業種を選択して下さい(複数選択可)"
                   persistent-hint
                   multiple
-                  v-model="profData.jobs"
+                  v-model="users.jobs"
                 ></v-select>
               </v-col>
               <v-col cols="10">
@@ -60,7 +60,7 @@
                   placeholder="※ 会津が大好きです。趣味は旅行です。"
                   hint="自己紹介を入力して下さい。"
                   persistent-hint
-                  v-model="profData.intro"
+                  v-model="users.intro"
                   :rules="[requireRule]"
                 ></v-text-field>
               </v-col>
@@ -79,33 +79,46 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import {requireRule} from '~/utils/validation';
 import { db, collection, addDoc } from "~/plugins/firebase";
+interface usersType {
+  name: String
+  birth: Date
+  jobs: Array<String>
+  intro: String
+}
+interface Data {
+  dialog: Boolean
+  users: usersType
+  requireRule: Function
+}
 export default Vue.extend({
-  data: () => ({
+  data(): Data {
+    return {
     dialog: false,
-    profData: {
+    users: {
       name: '',
-      birth: '',
+      birth: undefined,
       jobs: [],
       intro: "",
     },
-    requireRule
-  }),
+    requireRule,
+    }
+  },
   methods: {
-    close() {
+    close(): void {
       this.dialog = false
-      this.profData = {}
+      this.users = {}
     },
-    async save() {
+    async save(): Promise<void> {
       const now = new Date()
       addDoc(collection(db, 'users'), {
-        name: this.profData.name,
-        birth: this.profData.birth,
-        jobs: this.profData.jobs,
-        intro: this.profData.intro,
+        name: this.users.name,
+        birth: this.users.birth,
+        jobs: this.users.jobs,
+        intro: this.users.intro,
         avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
         createdAt: now,
       })

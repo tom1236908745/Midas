@@ -81,12 +81,25 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import { db, collection, addDoc } from "~/plugins/firebase";
 import {requireRule} from '~/utils/validation';
+interface formData {
+  title: String
+  exp: String
+  jobs: Array<String>
+  money: Number
+}
+interface Data {
+  dialog: Boolean
+  postData: formData
+  valid: Boolean
+  requireRule: Function
+}
 export default Vue.extend({
-  data: () => ({
+  data(): Data {
+    return{
     dialog: false,
     // form入力データ
     postData: {
@@ -98,10 +111,11 @@ export default Vue.extend({
     // バリデーション
     valid: true,
     requireRule,
-  }),
+    }
+  },
   methods: {
      // コメント追加
-    addComment() {
+    addComment(): void {
       const now = new Date()
       addDoc(collection(db, 'posts'), {
         title: this.postData.title,
@@ -113,10 +127,10 @@ export default Vue.extend({
       
       this.close()
     },
-    clear() {
+    clear(): void {
       this.$refs.form.reset()
     },
-    close() {
+    close(): void {
       this.clear()
       this.dialog = false
     }
