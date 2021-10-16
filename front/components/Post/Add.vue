@@ -1,24 +1,26 @@
 <template>
-  <v-row class="mt-5" justify="center">
-    <v-dialog
-      @click:outside="close()"
-      v-model="dialog"
-      persistent
-      max-width="700px"
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark v-bind="attrs" v-on="on"> 投稿する </v-btn>
-      </template>
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">新規投稿</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="valid">
+    <v-row class="mt-5" justify="center">
+      <v-dialog
+        @click:outside="close()"
+        v-model="dialog"
+        persistent
+        max-width="700px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn color="primary" dark v-bind="attrs" v-on="on">
+            投稿する
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">新規投稿</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
               <v-row>
                 <v-col cols="10">
-                  タイトル<span>*</span>
+                  タイトル<span class="red--text">*</span>
                   <v-text-field
                     placeholder="※ パソコンについて相談したい。"
                     hint="記事のタイトルを入力して下さい。"
@@ -29,7 +31,7 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="10">
-                  概要*
+                  概要<span class="red--text">*</span>
                   <v-text-field
                     placeholder="※ 会津大学生にパソコンの事を聞きたい。"
                     hint="記事の概要を説明して下さい。"
@@ -65,26 +67,33 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              
-            </v-form>
-          </v-container>
-          <small>* ... 必須項目です</small>
-        </v-card-text>
+            </v-container>
+            <small><span class="red--text">*</span> ... 必須項目です</small>
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="red lighten-3" @click="close()"> 閉じる </v-btn>
-          <v-btn :disabled="!valid" color="blue lighten-3" @click="addComment"> 投稿する </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+          <v-card-actions>
+            <v-spacer />
+
+            <v-btn color="red lighten-3 white--text" @click="close()"> 閉じる </v-btn>
+            <v-btn
+              :disabled="!valid"
+              color="blue lighten-3 white--text"
+              @click="addComment"
+            >
+              投稿
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </v-form>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { db, collection, addDoc } from "~/plugins/firebase";
-import {requireRule} from '~/utils/validation';
+import Vue from 'vue'
+import { db, collection, addDoc } from '~/plugins/firebase'
+import { requireRule } from '~/utils/validation'
+import { VForm } from '~/@types/index'
 interface formData {
   uid: string
   name: string
@@ -94,33 +103,38 @@ interface formData {
   money: Number
 }
 interface Data {
+  valid: boolean
+  form: VForm | undefined
   dialog: Boolean
   postData: formData
-  valid: Boolean
   requireRule: Function
 }
 export default Vue.extend({
   data(): Data {
-    return{
-    dialog: false,
-    // form入力データ
-    postData: {
-      uid: '',
-      name: '',
-      title: '',
-      exp: '',
-      jobs: [],
-      money: 0,
-    },
-    // バリデーション
-    valid: true,
-    requireRule,
+    return {
+      valid: true,
+      form: undefined,
+      dialog: false,
+      // form入力データ
+      postData: {
+        uid: '',
+        name: '',
+        title: '',
+        exp: '',
+        jobs: [],
+        money: 0,
+      },
+      requireRule,
     }
   },
+  mounted() {
+    this.form = this.$refs.vform as VForm
+    this.reset()
+  },
   methods: {
-     // コメント追加
-    addComment(): void {
-      const now = new Date()
+    async addComment(): Promise<void> {
+      const form = this.$refs.vform as VForm
+      if (!form.validate()) return
       addDoc(collection(db, 'posts'), {
         uid: this.$store.getters.user.uid,
         name: this.$store.getters.user.name,
@@ -128,19 +142,27 @@ export default Vue.extend({
         exp: this.postData.exp,
         jobs: this.postData.jobs,
         money: this.postData.money,
-        createdAt: now
+        createdAt: new Date(),
       })
-      
-      this.close()
-    },
-    clear(): void {
-      (this as any).$refs.form?.reset()
+        .then(() => {
+          this.close()
+        })
+        .catch(() => {
+          // vuetify使用に変更
+          alert('エラー')
+          this.close()
+        })
     },
     close(): void {
-      this.clear()
       this.dialog = false
-    }
-  }
+      this.reset()
+    },
+    reset(): void {
+      const form = this.$refs.vform as VForm
+      form?.reset()
+      form?.resetValidation()
+    },
+  },
 })
 </script>
 
