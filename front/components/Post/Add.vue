@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid">
+  <v-form ref="vform" v-model="valid">
     <v-row class="mt-5" justify="center">
       <v-dialog
         @click:outside="close()"
