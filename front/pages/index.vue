@@ -25,7 +25,7 @@ import { getAuth } from "~/plugins/firebase";
 
 export default Vue.extend({
   methods: {
-    signOut(err): void {
+    signOut(err: any): void {
       const auth = getAuth()
       this.$store
         .dispatch('signOut', {
@@ -36,7 +36,7 @@ export default Vue.extend({
             name: 'login'
           })
         })
-        .catch((err) => {
+        .catch((err: any) => {
           alert(err.message)
         })
     }

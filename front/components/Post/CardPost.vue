@@ -42,18 +42,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import { db, collection, addDoc, getDocs, doc, deleteDoc, onSnapshot, query } from "~/plugins/firebase"
-interface elementType {
-  avatar: String
-  birth: String
-  createdAt: Date
-  intro: String
-  name: String
-  id: String
-  sort: String
-}
+// interface elementType {
+//   avatar: String
+//   birth: String
+//   createdAt: Date
+//   intro: String
+//   name: String
+//   id: String
+//   sort: String
+// }
 interface Data {
-  element: elementType
-  posts: Array<elementType>
+  element: any //elementType
+  posts: Array<any> // Array<elementType>
 }
 export default Vue.extend({
   data(): Data {
@@ -61,7 +61,7 @@ export default Vue.extend({
     element: {
       avatar: '',
       birth: '',
-      createdAt: undefined,
+      createdAt: new Date(),
       intro: '',
       name: '',
       id: '',
@@ -70,8 +70,7 @@ export default Vue.extend({
       posts: [{
         avatar: '',
         birth: '',
-        createdAt: undefined,
-        intro: '',
+        createdAt: new Date(),
         name: '',
         id: '',
         sort: '',
@@ -88,12 +87,15 @@ export default Vue.extend({
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second:'numeric' };
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       this.posts = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach((doc: any) => {
         // posts.push(doc.data().title);
+        console.log('\x1b[30mdoc',doc.data());
+        
         this.element = doc.data()
         this.element["id"] = doc.id
-        this.element["sort"] = this.element.createdAt.seconds
-        this.element.createdAt = new Date(this.element.createdAt.seconds).toLocaleDateString( 'ja-JP', options)
+        this.element["sort"] = this.element.createdAt // .second
+        // this.element.createdAt = new Date(this.element.createdAt).toLocaleDateString( 'ja-JP', options)
+        this.element.createdAt = new Date()
         this.posts.push(this.element)
       });
       this.posts.sort((a,b) => {
@@ -105,7 +107,7 @@ export default Vue.extend({
     });
   },
   methods: {
-    async deletepost(id) {
+    async deletepost(id: any) {
       if (!window.confirm('コメントを削除してよろしいですか？')) return
       await deleteDoc(doc(db, "posts", id))
     },

@@ -111,7 +111,7 @@ interface Data {
   tab: any
   registerValid: Boolean
   registerEmail: String
-  registerPassword: String
+  registerPassword: string
   registerPasswordAgain: String
   emailRule: Function
   registerPasswordRule: Function
@@ -134,7 +134,7 @@ export default Vue.extend({
               (v: any) => {
                   if (v) {
                       return (
-                          this.$refs.registerPassword.value === v ||
+                          (this as any).$refs.registerPassword.value === v ||
                           'パスワードと一致しません'
                       )
                   }else{
@@ -147,9 +147,6 @@ export default Vue.extend({
       }
   },
   computed: {
-      progress() {
-          return this.score.value
-      },
       score() {
           const result = zxcvbn(this.registerPassword)
 
@@ -183,9 +180,9 @@ export default Vue.extend({
       }
   },
   methods: {
-    email_register: function(err) {
+    email_register: function(err: any) {
       const auth = getAuth()
-        if (this.$refs.register_form.validate()) {
+        if ((this as any).$refs.register_form.validate()) {
           this.$store
             .dispatch('signUp', {
               auth: auth,
@@ -197,14 +194,14 @@ export default Vue.extend({
                 this.registerPassword = ''
                 this.$router.push({
                   name: 'index',
-                  params: {
-                    dashboard_msg: true,
-                    dashboard_msg_text:
-                    'アカウントの登録が完了しました。'
-                  }
+                  // params: {
+                  //   dashboard_msg: true,
+                  //   dashboard_msg_text:
+                  //   'アカウントの登録が完了しました。'
+                  // }
                 })
             })
-            .catch((err) => {
+            .catch((err: any) => {
                 console.log(err)
                 if (err.code === 'auth/email-already-in-use') {
                     this.registerErrorMsg =

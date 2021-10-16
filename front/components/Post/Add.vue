@@ -65,7 +65,7 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
-              <v-btn :disabled="!valid" @click="addComment"> 投稿する </v-btn>
+              
             </v-form>
           </v-container>
           <small>* ... 必須項目です</small>
@@ -73,8 +73,8 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="close()"> Close </v-btn>
-          <v-btn color="blue darken-1" text @click="close()"> Save </v-btn>
+          <v-btn color="red lighten-3" @click="close()"> 閉じる </v-btn>
+          <v-btn :disabled="!valid" color="blue lighten-3" @click="addComment"> 投稿する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -128,7 +128,7 @@ export default Vue.extend({
       this.close()
     },
     clear(): void {
-      this.$refs.form.reset()
+      (this as any).$refs.form?.reset()
     },
     close(): void {
       this.clear()

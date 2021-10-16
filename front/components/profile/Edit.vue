@@ -80,14 +80,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import {requireRule} from '~/utils/validation';
-import { db, collection, addDoc } from "~/plugins/firebase";
+import Vue from 'vue'
+import { requireRule } from '~/utils/validation'
+import { db, collection, addDoc } from '~/plugins/firebase'
 interface usersType {
   name: String
   birth: Date
   jobs: Array<String>
   intro: String
+}
+const defaultUseData: usersType = {
+  name: '',
+  birth: new Date(),
+  jobs: [],
+  intro: '',
 }
 interface Data {
   dialog: Boolean
@@ -97,20 +103,20 @@ interface Data {
 export default Vue.extend({
   data(): Data {
     return {
-    dialog: false,
-    users: {
-      name: '',
-      birth: undefined,
-      jobs: [],
-      intro: "",
-    },
-    requireRule,
+      dialog: false,
+      users: {
+        name: '',
+        birth: new Date(),
+        jobs: [],
+        intro: '',
+      },
+      requireRule,
     }
   },
   methods: {
     close(): void {
       this.dialog = false
-      this.users = {}
+      this.users = defaultUseData
     },
     async save(): Promise<void> {
       const now = new Date()
@@ -119,12 +125,14 @@ export default Vue.extend({
         birth: this.users.birth,
         jobs: this.users.jobs,
         intro: this.users.intro,
-        avatar: 'https://picsum.photos/50?image=' + (Math.floor(Math.random() * 400) + 1),
+        avatar:
+          'https://picsum.photos/50?image=' +
+          (Math.floor(Math.random() * 400) + 1),
         createdAt: now,
       })
       this.close()
-    }
-  }
+    },
+  },
 })
 </script>
 

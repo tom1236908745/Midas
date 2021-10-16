@@ -92,7 +92,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    email_login(err): void {
+    email_login(err: any): void {
       const auth = getAuth()
       this.$store
         .dispatch('signInWithEmail', {
@@ -105,7 +105,7 @@ export default Vue.extend({
           this.loginPassword = ''
           this.$router.push('/')
         })
-        .catch((err) => {
+        .catch((err: any) => {
           if (err.code === 'auth/user-disabled') {
               this.loginErrorMsg =
                   'このアカウントはロックされています。'
