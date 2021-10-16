@@ -84,10 +84,10 @@ import Vue from 'vue'
 import { requireRule } from '~/utils/validation'
 import { db, collection, addDoc } from '~/plugins/firebase'
 interface usersType {
-  name: String
+  name: string
   birth: Date
   jobs: Array<String>
-  intro: String
+  intro: string
 }
 const defaultUseData: usersType = {
   name: '',
@@ -109,6 +109,7 @@ export default Vue.extend({
         birth: new Date(),
         jobs: [],
         intro: '',
+        email: this.$store.getters.user.email
       },
       requireRule,
     }

@@ -84,18 +84,14 @@ export default Vue.extend({
   },
   mounted() {
     const q = query(collection(db, "posts"));
-    const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second:'numeric' };
+    const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'}; // second:'numeric'
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       this.posts = [];
       querySnapshot.forEach((doc: any) => {
-        // posts.push(doc.data().title);
-        console.log('\x1b[30mdoc',doc.data());
-        
         this.element = doc.data()
-        this.element["id"] = doc.id
-        this.element["sort"] = this.element.createdAt // .second
-        // this.element.createdAt = new Date(this.element.createdAt).toLocaleDateString( 'ja-JP', options)
-        this.element.createdAt = new Date()
+        this.element.id = doc.id
+        this.element.sort = this.element.createdAt.seconds
+        this.element.createdAt = this.element.createdAt.toDate().toLocaleDateString( 'ja-JP', options)
         this.posts.push(this.element)
       });
       this.posts.sort((a,b) => {
