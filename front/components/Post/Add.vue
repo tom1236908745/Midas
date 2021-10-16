@@ -86,9 +86,11 @@ import Vue from 'vue';
 import { db, collection, addDoc } from "~/plugins/firebase";
 import {requireRule} from '~/utils/validation';
 interface formData {
-  title: String
+  uid: string
+  name: string
+  title: string
   exp: String
-  jobs: Array<String>
+  jobs: Array<string>
   money: Number
 }
 interface Data {
@@ -103,8 +105,10 @@ export default Vue.extend({
     dialog: false,
     // form入力データ
     postData: {
-      title: "",
-      exp: "",
+      uid: '',
+      name: '',
+      title: '',
+      exp: '',
       jobs: [],
       money: 0,
     },
@@ -118,6 +122,8 @@ export default Vue.extend({
     addComment(): void {
       const now = new Date()
       addDoc(collection(db, 'posts'), {
+        uid: this.$store.getters.user.uid,
+        name: this.$store.getters.user.name,
         title: this.postData.title,
         exp: this.postData.exp,
         jobs: this.postData.jobs,

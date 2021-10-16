@@ -88,12 +88,14 @@ interface usersType {
   birth: Date
   jobs: Array<String>
   intro: string
+  uid: string
 }
 const defaultUseData: usersType = {
   name: '',
   birth: new Date(),
   jobs: [],
   intro: '',
+  uid: '',
 }
 interface Data {
   dialog: Boolean
@@ -109,7 +111,7 @@ export default Vue.extend({
         birth: new Date(),
         jobs: [],
         intro: '',
-        email: this.$store.getters.user.email
+        uid: this.$store.getters.uid,
       },
       requireRule,
     }
@@ -131,6 +133,7 @@ export default Vue.extend({
           (Math.floor(Math.random() * 400) + 1),
         createdAt: now,
       })
+      this.$store.commit('setUserName',this.users.name)
       this.close()
     },
   },

@@ -6,10 +6,8 @@ export default (context) => {
     return new Promise((resolve) => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
-           
-            store.commit('setUser', user)
+            store.commit('setUserInfo', user)
             resolve()
-            
         })
     })
 }

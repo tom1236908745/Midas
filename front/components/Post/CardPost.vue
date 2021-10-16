@@ -12,9 +12,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-subtitle class="text--primary subheading">{{
-                  prof.includes('@')
-                    ? prof.substring(0, prof.indexOf('@'))
-                    : prof
+                  post.name
                 }}</v-list-item-subtitle>
                 {{ post.title }}
                 <v-list-item-subtitle>
@@ -40,8 +38,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { db, collection, addDoc, getDocs, doc, deleteDoc, onSnapshot, query } from "~/plugins/firebase"
+import Vue from 'vue'
+import {
+  db,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  deleteDoc,
+  onSnapshot,
+  query,
+} from '~/plugins/firebase'
 // interface elementType {
 //   avatar: String
 //   birth: String
@@ -58,54 +65,65 @@ interface Data {
 export default Vue.extend({
   data(): Data {
     return {
-    element: {
-      avatar: '',
-      birth: '',
-      createdAt: new Date(),
-      intro: '',
-      name: '',
-      id: '',
-      sort: '',
-    },
-      posts: [{
+      element: {
         avatar: '',
         birth: '',
         createdAt: new Date(),
+        intro: '',
         name: '',
         id: '',
         sort: '',
-      }],
+      },
+      posts: [
+        {
+          avatar: '',
+          birth: '',
+          createdAt: new Date(),
+          name: '',
+          id: '',
+          sort: '',
+        },
+      ],
     }
   },
-   computed: {
-    prof () {
+  computed: {
+    prof() {
       return this.$store.getters.user.email
     },
   },
   mounted() {
-    const q = query(collection(db, "posts"));
-    const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'}; // second:'numeric'
+    const q = query(collection(db, 'posts'))
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    } // second:'numeric'
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      this.posts = [];
+      this.posts = []
       querySnapshot.forEach((doc: any) => {
         this.element = doc.data()
         this.element.id = doc.id
         this.element.sort = this.element.createdAt.seconds
-        this.element.createdAt = this.element.createdAt.toDate().toLocaleDateString( 'ja-JP', options)
+        this.element.createdAt = this.element.createdAt
+          .toDate()
+          .toLocaleDateString('ja-JP', options)
         this.posts.push(this.element)
-      });
-      this.posts.sort((a,b) => {
-        if(a.sort < b.sort)return 1;
-        else if (a.sort > b.sort) return -1;
+      })
+      this.posts.sort((a, b) => {
+        if (a.sort < b.sort) return 1
+        else if (a.sort > b.sort) return -1
         else return 0
       })
       return this.posts
-    });
+    })
   },
   methods: {
     async deletepost(id: any) {
       if (!window.confirm('コメントを削除してよろしいですか？')) return
-      await deleteDoc(doc(db, "posts", id))
+      await deleteDoc(doc(db, 'posts', id))
     },
   },
 })

@@ -2,7 +2,7 @@
   <div>
     <h2 class="mt-10">
       This is
-      {{ prof.includes('@') ? prof.substring(0, prof.indexOf('@')) : prof }}'
+      {{ name }}'
       profile
     </h2>
     <ProfileEdit />
@@ -53,7 +53,10 @@ export default Vue.extend({
     }
   },
   computed: {
-    prof(): void {
+    name(): void {
+      return this.$store.getters.user.name
+    },
+    email(): void {
       return this.$store.getters.user.email
     },
   },
@@ -67,7 +70,6 @@ export default Vue.extend({
         this.element['id'] = doc.id
         this.users.push(this.element)
       })
-      console.log('user',this.users);
       
       return this.users
     })
