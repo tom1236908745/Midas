@@ -89,14 +89,14 @@ import { db, collection, addDoc } from '~/plugins/firebase'
 import { VForm } from '~/@types/index'
 interface usersType {
   name: string
-  birth: Date
+  birth: Date | null
   jobs: Array<string>
   intro: string
   uid: string
 }
 const defaultUseData: usersType = {
   name: '',
-  birth: new Date(),
+  birth: null,
   jobs: [],
   intro: '',
   uid: '',
@@ -119,7 +119,7 @@ export default Vue.extend({
         birth: new Date(),
         jobs: [],
         intro: '',
-        uid: this.$store.getters.uid,
+        uid: (this as any).$store.getters.uid,
       },
       requireRule,
     }
