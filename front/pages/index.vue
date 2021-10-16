@@ -32,6 +32,8 @@ export default Vue.extend({
           auth: auth
         })
         .then(() => {
+          console.log('success');
+          
           this.$router.push({
             name: 'login'
           })

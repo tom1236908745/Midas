@@ -15,8 +15,8 @@ export const state = () => ({
 
 export const mutations = {
   setUserInfo(state, payload) {
-    state.user.email = payload.email
-    state.user.uid = payload.uid
+    state.user.email = payload?.email
+    state.user.uid = payload?.uid
   },
   setUserName(state, payload) {
     state.user.name = payload
@@ -42,6 +42,6 @@ export const getters = {
     return state.user
   },
   isAuthenticated(state) {
-    return !!state.user
+    return !!state.user.uid
   },
 }

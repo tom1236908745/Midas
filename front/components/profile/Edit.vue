@@ -116,7 +116,7 @@ export default Vue.extend({
       dialog: false,
       users: {
         name: '',
-        birth: new Date(),
+        birth: null,
         jobs: [],
         intro: '',
         uid: (this as any).$store.getters.uid,
