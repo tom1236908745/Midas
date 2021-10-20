@@ -23,7 +23,7 @@
                     placeholder="※ 会津太郎"
                     hint="氏名を入力して下さい。"
                     persistent-hint　required
-                    v-model="users.name"
+                    v-model="user.name"
                     :rules="[requireRule]"
                   ></v-text-field>
                 </v-col>
@@ -34,7 +34,7 @@
                     persistent-hint
                     type="date"
                     required
-                    v-model="users.birth"
+                    v-model="user.birth"
                     :rules="[requireRule]"
                   ></v-text-field>
                 </v-col>
@@ -52,7 +52,7 @@
                     hint="経験したことのある業種を選択して下さい(複数選択可)"
                     persistent-hint
                     multiple
-                    v-model="users.jobs"
+                    v-model="user.jobs"
                   ></v-select>
                 </v-col>
                 <v-col cols="10">
@@ -61,7 +61,7 @@
                     placeholder="※ 会津が大好きです。趣味は旅行です。"
                     hint="自己紹介を入力して下さい。"
                     persistent-hint
-                    v-model="users.intro"
+                    v-model="user.intro"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -71,8 +71,14 @@
 
           <v-card-actions>
             <v-spacer />
-            <v-btn color="red lighten-3 white--text" @click="close()"> 閉じる </v-btn>
-            <v-btn color="blue lighten-3 white--text" :disabled="!valid" @click="save()">
+            <v-btn color="red lighten-3 white--text" @click="close()">
+              閉じる
+            </v-btn>
+            <v-btn
+              color="blue lighten-3 white--text"
+              :disabled="!valid"
+              @click="save()"
+            >
               保存
             </v-btn>
           </v-card-actions>
@@ -85,16 +91,28 @@
 <script lang="ts">
 import Vue from 'vue'
 import { requireRule } from '~/utils/validation'
-import { db, collection, addDoc } from '~/plugins/firebase'
+import {
+  db,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+  onSnapshot,
+  query,
+} from '~/plugins/firebase'
 import { VForm } from '~/@types/index'
-interface usersType {
+interface userType {
+  id: string
   name: string
   birth: Date | null
   jobs: Array<string>
   intro: string
   uid: string
 }
-const defaultUseData: usersType = {
+const defaultUseData: userType = {
+  id: '',
   name: '',
   birth: null,
   jobs: [],
@@ -105,7 +123,8 @@ interface Data {
   valid: boolean
   form: VForm | undefined
   dialog: boolean
-  users: usersType
+  user: userType
+  userStore: userType
   requireRule: Function
 }
 export default Vue.extend({
@@ -114,12 +133,21 @@ export default Vue.extend({
       valid: true,
       form: undefined,
       dialog: false,
-      users: {
+      user: {
+        id: '',
         name: '',
         birth: null,
         jobs: [],
         intro: '',
-        uid: (this as any).$store.getters.uid,
+        uid: '',
+      },
+      userStore: {
+        id: '',
+        name: '',
+        birth: null,
+        jobs: [],
+        intro: '',
+        uid: '',
       },
       requireRule,
     }
@@ -127,40 +155,84 @@ export default Vue.extend({
   mounted() {
     this.form = this.$refs.vform as VForm
     this.reset()
+
+    const q = query(collection(db, 'users'))
+
+    onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((user: any) => {
+        if (user.data().uid === this.$store.getters.user.uid) {
+          this.userStore = user.data()
+          this.userStore.id = user.id
+          this.$store.commit('setUserName', this.userStore.name)
+          this.close()
+        }
+      })
+    })
+    
+    this.close()
   },
   methods: {
     async save(): Promise<void> {
+      this.user.uid = this.$store.getters.user.uid
       const form = this.$refs.vform as VForm
       if (!form.validate()) return
       const now = new Date()
-      addDoc(collection(db, 'users'), {
-        name: this.users.name,
-        birth: this.users.birth,
-        jobs: this.users.jobs,
-        intro: this.users.intro,
-        avatar:
-          'https://picsum.photos/50?image=' +
-          (Math.floor(Math.random() * 400) + 1),
-        createdAt: now,
-      })
-        .then(() => {
-          this.$store.commit('setUserName', this.users.name)
+      if (!!this.user.id) {
+        if (!window.confirm('ユーザー情報を更新してよろしいですか？')) return
+        const userProf = doc(db, 'users', this.user.id)
+        try {
+          await updateDoc(userProf, {
+            uid: this.user.uid,
+            name: this.user.name,
+            birth: this.user.birth,
+            jobs: this.user.jobs,
+            intro: this.user.intro,
+            avatar:
+              'https://picsum.photos/50?image=' +
+              (Math.floor(Math.random() * 400) + 1),
+            createdAt: now,
+          })
+          // this.userStore = this.user
+          this.$store.commit('setUserName', this.user.name)
           this.close()
-        })
-        .catch(() => {
+        } catch (e) {
+          this.close()
           // vuetify使用に変更
           alert('エラー')
+        }
+      } else {
+        try {
+          const userProf = await addDoc(collection(db, 'users'), {
+            uid: this.user.uid,
+            name: this.user.name,
+            birth: this.user.birth,
+            jobs: this.user.jobs,
+            intro: this.user.intro,
+            avatar:
+              'https://picsum.photos/50?image=' +
+              (Math.floor(Math.random() * 400) + 1),
+            createdAt: now,
+          })
+          this.$store.commit('setUserName', this.user.name)
+          this.user.id = userProf.id
+          // this.userStore = this.user
           this.close()
-        })
+        } catch (e) {
+          this.close()
+          // vuetify使用に変更
+          alert('エラー')
+          console.log(e)
+        }
+      }
     },
     close(): void {
       this.dialog = false
-      this.users = defaultUseData
+      this.user =　JSON.parse(JSON.stringify(this.userStore))
       this.reset()
     },
     reset(): void {
       const form = this.$refs.vform as VForm
-      form?.reset()
+      // form?.reset()
       form?.resetValidation()
     },
   },
