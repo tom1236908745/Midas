@@ -6,7 +6,7 @@
         <p>{{ this.posts.content }}</p>
         <v-list three-line>
           <template v-for="(post, index) in posts">
-            <v-list-item :key="index">
+            <v-list-item :key="index" @click="postsPageRoute(post.id)">
               <v-list-item-avatar>
                 <img :src="post.avatar" />
               </v-list-item-avatar>
@@ -125,6 +125,9 @@ export default Vue.extend({
       if (!window.confirm('コメントを削除してよろしいですか？')) return
       await deleteDoc(doc(db, 'posts', id))
     },
+    postsPageRoute(id: any) :void {
+      this.$router.push(`/posts/${id}`)
+    }
   },
 })
 </script>
